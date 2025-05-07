@@ -209,13 +209,7 @@
             statusModal.hide();
         });
 
-        // Add button functionality
-        document.querySelector('.add-participant-btn')?.addEventListener('click', function() {
-            // Reset form
-            resetForm();
-            // Change modal title
-            document.getElementById('modal-title-h3').innerText = 'Add Participant';
-        });
+
 
         // Mock functions (to be implemented with actual API calls)
         function fetchParticipantData(participantId) {
@@ -249,13 +243,6 @@
             }
         }
 
-        function resetForm() {
-            // Reset all form fields
-            document.querySelectorAll('#student-form-modal input').forEach(input => {
-                input.value = '';
-            });
-            document.getElementById('student-status').value = 'I';
-            document.getElementById('assigned-computer').value = '';
-        }
+
     });
 </script>

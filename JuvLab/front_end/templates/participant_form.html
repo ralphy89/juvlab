@@ -12,7 +12,7 @@
                         <button id="btn-close-student-form" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" title="Close form"></button>
                     </div>
                     <div class="card-body">
-                        <form role="form text-left" method="post" action="{% url 'add-students' %}">
+                        <form role="form text-left" method="post" >
                             <div class="form-group mb-3">
                                 <label for="first-name">First Name</label>
                                 <div class="input-group has-validation">
@@ -85,7 +85,7 @@
                                 <div class="input-group has-validation">
                                     <span class="input-group-text"><i class="fas fa-user-check"></i></span>
                                     <select class="form-control" id="student-status" name="status">
-                                        <option value="I" selected>Inactive</option>
+                                        <option value="Inactive" selected>Inactive</option>
                                     </select>
                                 </div>
                             </div>
@@ -118,7 +118,7 @@
 {#                            </div>#}
 
                             <div class="text-center">
-                                <button id="save-student-btn" type="submit" class="btn btn-lg w-100 mt-4 mb-0 {% if 'guests' in request.path %}guest-btn{% endif %}">
+                                <button id="save-student-btn" type="button" class="btn btn-lg w-100 mt-4 mb-0 {% if 'guests' in request.path %}guest-btn{% endif %}">
                                     <i class="fas fa-save me-2"></i> Save
                                 </button>
                             </div>
