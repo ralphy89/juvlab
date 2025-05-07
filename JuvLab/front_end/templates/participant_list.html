@@ -1,0 +1,261 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/participant_list.css' %}">
+<section id="participant-list">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Registered Participants</h2>
+            <div class="search-wrapper">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="participantSearch" class="search-input" placeholder="Search by name, email, or computer...">
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="participant-table">
+                <thead>
+                <tr>
+                    <th>Participant Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Program</th>
+                    <th>Computer Assigned</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody id="table-body-participant">
+                {% for participant in participants %}
+                    <tr>
+                        <td>
+                            <div class="participant-info">
+                                <div class="participant-avatar">{{ participant.first_name|slice:":1" }}{{ participant.last_name|slice:":1" }}</div>
+                                <div class="participant-details">
+                                    <span class="participant-name">{{ participant.first_name }} {{ participant.last_name }}</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="email-text">{{ participant.email }}</span>
+                        </td>
+                        <td>
+                            <span class="phone-text">{{ participant.phone }}</span>
+                        </td>
+                        <td>
+                            <span class="program-text">{{ participant.program }}</span>
+                        </td>
+                        <td>
+                            {% if participant.assigned_computer %}
+                                <span class="computer-badge">
+                                    <i class="fas fa-laptop"></i>
+                                    {{ participant.assigned_computer }}
+                                </span>
+                            {% else %}
+                                <span class="no-computer">Not Assigned</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <span class="status-badge {% if participant.status == 'A' %}active{% elif participant.status == 'I' %}inactive{% else %}deleted{% endif %}">
+                                {{ participant.get_status_display|default:"Inactive" }}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="action-buttons">
+{#                                <button value="{{ participant.id }}" class="btn-edit" title="Edit Participant" data-bs-toggle="modal" data-bs-target="#student-form-modal">#}
+{#                                    <i class="fas fa-edit"></i>#}
+{#                                </button>#}
+
+                                {% if participant.status == 'A' %}
+                                    <button value="{{ participant.id }}" class="btn btn-success switch-btn-active" title="Switch to INACTIVE">
+                                        <i class="fas fa-power-off"></i>
+                                    </button>
+                                {% elif participant.status == 'I' %}
+                                    <button value="{{ participant.id }}" class="btn btn-warning switch-btn-inactive" title="Switch to ACTIVE">
+                                        <i class="fas fa-power-off"></i>
+                                    </button>
+                                {% else %}
+                                    <button value="{{ participant.id }}" class="btn btn-danger switch-btn-deleted" title="Permanently Deleted" disabled>
+                                        <i class="fas fa-ban"></i>
+                                    </button>
+                                {% endif %}
+
+{#                                <button value="{{ participant.id }}" class="btn-view" title="View Details">#}
+{#                                    <i class="fas fa-eye"></i>#}
+{#                                </button>#}
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% if not participants %}
+            <div class="no-results">
+                <i class="fas fa-users-slash"></i>
+                <p>No participants found</p>
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Confirmation Modal for Status Change -->
+<div class="modal fade" id="status-confirmation-modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content">
+            <div class="modal-body text-center p-4">
+                <div class="warning-icon mb-3">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <h4 class="mb-3" id="status-modal-title">Change Status?</h4>
+                <p class="mb-4" id="status-modal-message">Are you sure you want to change this participant's status?</p>
+                <input type="hidden" id="participant-id">
+                <input type="hidden" id="new-status">
+                <div class="d-flex justify-content-center">
+                    <button type="button" class="btn btn-outline-secondary me-2" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="confirm-status-btn">Confirm</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Search functionality
+        const searchInput = document.getElementById('participantSearch');
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const rows = document.querySelectorAll('#table-body-participant tr');
+
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                if (text.includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            // Show no results message if all rows are hidden
+            const visibleRows = document.querySelectorAll('#table-body-participant tr[style=""]').length;
+            const noResultsMessage = document.querySelector('.no-results');
+
+            if (visibleRows === 0 && rows.length > 0) {
+                if (!noResultsMessage) {
+                    const tableResponsive = document.querySelector('.table-responsive');
+                    const newNoResults = document.createElement('div');
+                    newNoResults.className = 'no-results search-no-results';
+                    newNoResults.innerHTML = '<i class="fas fa-search"></i><p>No participants match your search</p>';
+                    tableResponsive.appendChild(newNoResults);
+                }
+            } else {
+                const searchNoResults = document.querySelector('.search-no-results');
+                if (searchNoResults) {
+                    searchNoResults.remove();
+                }
+            }
+        });
+
+        // Edit button functionality
+        document.querySelectorAll('.btn-edit').forEach(button => {
+            button.addEventListener('click', function() {
+                const participantId = this.value;
+                // Fetch participant data and populate the form
+                fetchParticipantData(participantId);
+                // Change modal title
+                document.getElementById('modal-title-h3').innerText = 'Edit Participant';
+            });
+        });
+
+        // View button functionality
+        document.querySelectorAll('.btn-view').forEach(button => {
+            button.addEventListener('click', function() {
+                const participantId = this.value;
+                // Implement view functionality
+                viewParticipantDetails(participantId);
+            });
+        });
+
+        // Status switch buttons functionality
+        document.querySelectorAll('.switch-btn-active, .switch-btn-inactive').forEach(button => {
+            button.addEventListener('click', function() {
+                const participantId = this.value;
+                const newStatus = this.classList.contains('switch-btn-active') ? 'I' : 'A';
+                const statusText = newStatus === 'A' ? 'ACTIVE' : 'INACTIVE';
+
+                document.getElementById('participant-id').value = participantId;
+                document.getElementById('new-status').value = newStatus;
+                document.getElementById('status-modal-title').innerText = `Change Status to ${statusText}?`;
+                document.getElementById('status-modal-message').innerText =
+                    `Are you sure you want to change this participant's status to ${statusText}?`;
+
+                // Show confirmation modal
+                const statusModal = new bootstrap.Modal(document.getElementById('status-confirmation-modal'));
+                statusModal.show();
+            });
+        });
+
+        // Confirm status change button
+        document.getElementById('confirm-status-btn').addEventListener('click', function() {
+            const participantId = document.getElementById('participant-id').value;
+            const newStatus = document.getElementById('new-status').value;
+
+            // Implement status change functionality
+            changeParticipantStatus(participantId, newStatus);
+
+            // Hide modal
+            const statusModal = bootstrap.Modal.getInstance(document.getElementById('status-confirmation-modal'));
+            statusModal.hide();
+        });
+
+        // Add button functionality
+        document.querySelector('.add-participant-btn')?.addEventListener('click', function() {
+            // Reset form
+            resetForm();
+            // Change modal title
+            document.getElementById('modal-title-h3').innerText = 'Add Participant';
+        });
+
+        // Mock functions (to be implemented with actual API calls)
+        function fetchParticipantData(participantId) {
+            console.log('Fetching data for participant ID:', participantId);
+            // Actual implementation would fetch data from your backend
+        }
+
+        function viewParticipantDetails(participantId) {
+            console.log('Viewing details for participant ID:', participantId);
+            // Actual implementation would show detailed view
+        }
+
+        async function changeParticipantStatus(participantId, newStatus) {
+            console.log('Changing status for participant ID:', participantId, 'to', newStatus);
+            const id = parseInt(participantId);
+            const url = 'http://127.0.0.1:8000/api/change_p_status/' + id;
+            const response = await fetch(url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({new_status: newStatus}),
+                // …
+            });
+
+            if (response.ok) {
+                const data = await response.json()
+                if (data.Message === 'Status Changed') {
+                    location.reload();
+                }
+            }
+        }
+
+        function resetForm() {
+            // Reset all form fields
+            document.querySelectorAll('#student-form-modal input').forEach(input => {
+                input.value = '';
+            });
+            document.getElementById('student-status').value = 'I';
+            document.getElementById('assigned-computer').value = '';
+        }
+    });
+</script>

@@ -20,4 +20,5 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('bootcampManagement.urls')),
+    path('juvlab/', include('front_end.urls')),
 ]

@@ -1,0 +1,132 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/participant_form.css' %}">
+
+<!-- Modal form -->
+<div data-bs-backdrop="static" class="modal fade" id="student-form-modal" tabindex="-1" role="dialog" aria-labelledby="modal-form" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-body p-0">
+                <div class="card mb-0">
+                    <div class="card-header">
+                        <h3 id="modal-title-h3" class="fw-bolder">Add Participant</h3>
+                        <button id="btn-close-student-form" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" title="Close form"></button>
+                    </div>
+                    <div class="card-body">
+                        <form role="form text-left" method="post" action="{% url 'add-students' %}">
+                            <div class="form-group mb-3">
+                                <label for="first-name">First Name</label>
+                                <div class="input-group has-validation">
+                                    <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                    <input
+                                            id="first-name"
+                                            name="first_name"
+                                            type="text"
+                                            class="form-control"
+                                            placeholder="First Name"
+                                            aria-label="First name"
+                                            required="required"
+                                    />
+                                    <div class="invalid-feedback">Please provide a first name.</div>
+                                </div>
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label for="last-name">Last Name</label>
+                                <div class="input-group has-validation">
+                                    <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                    <input
+                                            id="last-name"
+                                            name="last_name"
+                                            type="text"
+                                            class="form-control"
+                                            placeholder="Last Name"
+                                            aria-label="Last name"
+                                            required="required"
+                                    />
+                                    <div class="invalid-feedback">Please provide a last name.</div>
+                                </div>
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label for="student-email">Email</label>
+                                <div class="input-group has-validation">
+                                    <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                    <input
+                                            id="student-email"
+                                            name="email"
+                                            type="email"
+                                            class="form-control"
+                                            placeholder="example@uniq.edu"
+                                            aria-label="Email"
+                                            required="required"
+                                    />
+                                    <div class="invalid-feedback">Please provide a valid email address.</div>
+                                </div>
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label for="student-phone">Phone</label>
+                                <div class="input-group has-validation">
+                                    <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                                    <input
+                                            id="student-phone"
+                                            name="phone"
+                                            type="number"
+                                            class="form-control"
+                                            placeholder="00000000"
+                                            aria-label="Phone number"
+                                    />
+                                    <div class="invalid-feedback">Please provide a valid phone number.</div>
+                                </div>
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label for="student-status">Status</label>
+                                <div class="input-group has-validation">
+                                    <span class="input-group-text"><i class="fas fa-user-check"></i></span>
+                                    <select class="form-control" id="student-status" name="status">
+                                        <option value="I" selected>Inactive</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label for="student-program">Program</label>
+                                <div class="input-group has-validation">
+                                    <span class="input-group-text"><i class="fas fa-list"></i></span>
+                                    <select class="form-control" id="student-program" name="program">
+                                        <option value="None" selected>None</option>
+                                        <option value="Data Science & AI - MyAkademi 2025">Data Science & AI - MyAkademi 2025</option>
+                                        <option value="Cyber Security - MyAkademi 2025">Cyber Security - MyAkademi 2025</option>
+                                        <option value="Software Engineering - MyAkademi 2025">Software Engineering - MyAkademi 2025</option>
+                                    </select>
+                                </div>
+                            </div>
+
+{#                            <div class="form-group mb-3">#}
+{#                                <label for="assigned-computer">Assigned Computer</label>#}
+{#                                <div class="input-group has-validation">#}
+{#                                    <span class="input-group-text"><i class="fas fa-laptop"></i></span>#}
+{#                                    <select class="form-control" id="assigned-computer">#}
+{#                                        <option value="" selected>Choose</option>#}
+{#                                        {% for computer in computers %}#}
+{#                                            <option value="{{ computer.name }}">{{ computer.name }}</option>#}
+{#                                        {% endfor %}#}
+{#                                    </select>#}
+{#                                    <div class="invalid-feedback">Please choose a computer.</div>#}
+{#                                </div>#}
+{#                            </div>#}
+
+                            <div class="text-center">
+                                <button id="save-student-btn" type="submit" class="btn btn-lg w-100 mt-4 mb-0 {% if 'guests' in request.path %}guest-btn{% endif %}">
+                                    <i class="fas fa-save me-2"></i> Save
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
