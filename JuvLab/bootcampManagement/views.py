@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .models import Student
-from .serializers import StudentSerializer
+from .models import Student, Computer
+from .serializers import StudentSerializer, ComputerSerializer
 from rest_framework import serializers, status
 import json
 
@@ -16,6 +16,10 @@ def api_overview(request):
         'Add_Students': '/add_students',
         'Update_Students': '/update_students/pk',
         'Change_Students_Status': '/change_p_status/pk',
+        'view_computers': '/',
+        'search by host name': '/?host_name=host_name',
+        'Add_Computers': '/add_computers',
+        'Update_Computers': '/update_students/pk',
     }
 
     return Response(api_urls)
@@ -36,6 +40,21 @@ def add_students(request):
         return Response(status=status.HTTP_404_NOT_FOUND)
 
 
+@api_view(['POST'])
+def add_computers(request):
+    computer = ComputerSerializer(data=request.data)
+    # validating for already existing data
+    if Computer.objects.filter(**request.data).exists():
+        raise serializers.ValidationError('Computer already exists')
+    print(computer)
+    if computer.is_valid():
+        computer.save()
+        print('Computer saved successfully')
+        return Response(computer.data)
+    else:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+
 @api_view(['GET'])
 def view_students(request):
     # checking for the parameters from the URL
@@ -52,10 +71,36 @@ def view_students(request):
         return Response(status=status.HTTP_404_NOT_FOUND)
 
 
+@api_view(['GET'])
+def view_computers(request):
+    # checking for the parameters from the URL
+    if request.query_params:
+        computers = Computer.objects.filter(**request.query_params.dict())
+    else:
+        computers = Computer.objects.all()
+
+    if computers:
+        serializer = ComputerSerializer(computers, many=True)
+        return Response(serializer.data)
+    else:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+
 @api_view(['POST'])
 def update_students(request, pk):
     student = Student.objects.get(id=pk)
     data = StudentSerializer(instance=student, data=request.data)
+    if data.is_valid():
+        data.save()
+        return Response(data.data)
+    else:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['POST'])
+def update_computers(request, pk):
+    computer = Computer.objects.get(id=pk)
+    data = StudentSerializer(instance=computer, data=request.data)
     if data.is_valid():
         data.save()
         return Response(data.data)

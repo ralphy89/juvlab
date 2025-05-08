@@ -1,0 +1,429 @@
+/* Computer Form Modal - Modern Futuristic Styling */
+
+/* Import fonts */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+
+:root {
+    /* Color scheme */
+    --primary-color: #2e3bff;
+    --secondary-color: #00d4ff;
+    --accent-color: #9d4edd;
+    --dark-bg: #0a0e17;
+    --darker-bg: #060a12;
+    --light-bg: #131b2e;
+    --light-text: #ffffff;
+    --muted-text: #b8c0d1;
+    --border-color: rgba(46, 59, 255, 0.3);
+    --hover-color: #4d59ff;
+    --success-color: #12ca95;
+    --danger-color: #ff2d55;
+
+    /* Effects */
+    --transition-speed: 0.3s;
+    --border-radius: 8px;
+    --large-border-radius: 16px;
+    --glow-effect: 0 0 10px rgba(0, 212, 255, 0.5);
+    --box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Modal Animation */
+@keyframes modalReveal {
+    0% {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.98);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Glow scan animation */
+@keyframes glowScan {
+    0% {
+        background-position: -500px 0;
+    }
+    100% {
+        background-position: 500px 0;
+    }
+}
+
+/* Modal Container */
+#computer-form-modal .modal-dialog {
+    max-width: 500px;
+    margin-top: 3rem;
+}
+
+#computer-form-modal.show .modal-dialog {
+    animation: modalReveal 0.4s ease forwards;
+}
+
+#computer-form-modal .modal-content {
+    background: linear-gradient(135deg, var(--light-bg) 0%, var(--darker-bg) 100%);
+    border: 1px solid var(--border-color);
+    border-radius: var(--large-border-radius);
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), var(--glow-effect);
+    position: relative;
+}
+
+#computer-form-modal .modal-content:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--secondary-color), var(--accent-color));
+    z-index: 1;
+}
+
+/* Card Inside Modal */
+#computer-form-modal .card {
+    background: transparent;
+    border: none;
+    margin: 0;
+}
+
+/* Card Header */
+#computer-form-modal .card-header {
+    background: linear-gradient(to right, rgba(46, 59, 255, 0.2), rgba(157, 78, 221, 0.2));
+    border-bottom: 1px solid var(--border-color);
+    padding: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+#computer-form-modal .card-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 200%;
+    height: 100%;
+    background: linear-gradient(90deg,
+    transparent,
+    rgba(0, 212, 255, 0.1),
+    transparent);
+    animation: glowScan 5s infinite linear;
+}
+
+#computer-form-modal .card-header h3 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+    background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-family: 'Outfit', sans-serif;
+    letter-spacing: 0.5px;
+    position: relative;
+    z-index: 2;
+}
+
+/* Close Button */
+#computer-form-modal .btn-close {
+    background: transparent url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23ffffff'%3e%3cpath d='M.293.293a1 1 0 011.414 0L8 6.586 14.293.293a1 1 0 111.414 1.414L9.414 8l6.293 6.293a1 1 0 01-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 01-1.414-1.414L6.586 8 .293 1.707a1 1 0 010-1.414z'/%3e%3c/svg%3e") center/1em auto no-repeat;
+    opacity: 0.7;
+    transition: all var(--transition-speed) ease;
+    position: relative;
+    z-index: 2;
+}
+
+#computer-form-modal .btn-close:hover {
+    opacity: 1;
+    transform: rotate(90deg) scale(1.1);
+}
+
+/* Card Body */
+#computer-form-modal .card-body {
+    padding: 1.75rem;
+    background: linear-gradient(135deg, rgba(19, 27, 46, 0.4), rgba(10, 14, 23, 0.8));
+}
+
+/* Form Elements */
+#computer-form-modal form label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--muted-text);
+    font-weight: 500;
+    font-size: 0.95rem;
+    letter-spacing: 0.5px;
+    position: relative;
+    transition: all var(--transition-speed);
+}
+
+#computer-form-modal form label:after {
+    content: '';
+    position: absolute;
+    bottom: -3px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: linear-gradient(to right, var(--secondary-color), transparent);
+    transition: width var(--transition-speed) ease;
+}
+
+#computer-form-modal .input-group:focus-within + label:after,
+#computer-form-modal label:hover:after {
+    width: 100%;
+}
+
+#computer-form-modal .input-group {
+    margin-bottom: 0.75rem;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all var(--transition-speed) ease;
+    position: relative;
+}
+
+#computer-form-modal .input-group:focus-within {
+    box-shadow: 0 0 0 2px rgba(46, 59, 255, 0.25), 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+#computer-form-modal .form-control {
+    background-color: rgba(10, 14, 23, 0.7);
+    border: 1px solid var(--border-color);
+    color: var(--light-text);
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    font-family: 'Outfit', sans-serif;
+    transition: all var(--transition-speed) ease;
+    outline: none !important;
+    backdrop-filter: blur(5px);
+}
+
+#computer-form-modal .form-control:focus {
+    background-color: rgba(19, 27, 46, 0.9);
+    border-color: var(--primary-color);
+    box-shadow: none;
+    color: var(--light-text);
+}
+
+/* Placeholder styling */
+#computer-form-modal .form-control::placeholder {
+    color: rgba(184, 192, 209, 0.5);
+    opacity: 1;
+    transition: all var(--transition-speed);
+}
+
+#computer-form-modal .form-control:focus::placeholder {
+    opacity: 0.7;
+    transform: translateX(5px);
+}
+
+/* Select Styling */
+#computer-form-modal select.form-control {
+    appearance: none;
+    padding-right: 2.5rem;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%2300d4ff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 16px 12px;
+    cursor: pointer;
+}
+
+#computer-form-modal select.form-control option {
+    background-color: var(--darker-bg);
+    color: var(--light-text);
+    padding: 0.75rem;
+}
+
+/* Status select styling */
+#computer-form-modal #pc-status {
+    border-left: 3px solid var(--success-color);
+}
+
+#computer-form-modal #pc-status option[value="Available"] {
+    background: linear-gradient(to right, rgba(18, 202, 149, 0.2), transparent);
+}
+
+#computer-form-modal #pc-status option[value="Occupied"] {
+    background: linear-gradient(to right, rgba(255, 149, 0, 0.2), transparent);
+}
+
+#computer-form-modal #pc-status option[value="Maintenance"] {
+    background: linear-gradient(to right, rgba(255, 45, 85, 0.2), transparent);
+}
+
+/* Validation styling */
+#computer-form-modal .form-control.is-invalid {
+    border-color: var(--danger-color);
+    box-shadow: 0 0 0 1px rgba(255, 45, 85, 0.25);
+    background-image: none;
+}
+
+#computer-form-modal .invalid-feedback {
+    color: var(--danger-color);
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+    margin-bottom: 0.5rem;
+    display: block;
+    opacity: 0;
+    transform: translateY(-5px);
+    transition: all var(--transition-speed) ease;
+}
+
+#computer-form-modal .is-invalid ~ .invalid-feedback {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Save button */
+#computer-form-modal #save-computer-btn {
+    background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+    color: var(--light-text);
+    border: none;
+    border-radius: var(--border-radius);
+    padding: 0.85rem 1.5rem;
+    font-weight: 500;
+    font-size: 1.05rem;
+    letter-spacing: 0.5px;
+    transition: all var(--transition-speed) ease;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    box-shadow: 0 4px 15px rgba(46, 59, 255, 0.3);
+}
+
+#computer-form-modal #save-computer-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent);
+    transition: var(--transition-speed);
+    z-index: -1;
+}
+
+#computer-form-modal #save-computer-btn:hover {
+    box-shadow: 0 6px 20px rgba(46, 59, 255, 0.5), var(--glow-effect);
+    transform: translateY(-2px);
+}
+
+#computer-form-modal #save-computer-btn:hover::before {
+    animation: glowScan 1.5s infinite;
+}
+
+#computer-form-modal #save-computer-btn:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 10px rgba(46, 59, 255, 0.3);
+}
+
+/* Position inputs styling */
+#computer-form-modal #pc-position-x,
+#computer-form-modal #pc-position-y {
+    border-left: 3px solid var(--secondary-color);
+}
+
+/* Icon styling */
+#computer-form-modal .fa {
+    color: var(--secondary-color);
+    margin-left: 0.5rem;
+    transition: all var(--transition-speed);
+}
+
+#computer-form-modal .fa-arrow-right {
+    font-size: 0.9rem;
+}
+
+#computer-form-modal .fa-arrow-up {
+    font-size: 0.9rem;
+}
+
+/* Valid feedback styling */
+#computer-form-modal .valid-feedback {
+    color: var(--success-color);
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+    margin-bottom: 0.5rem;
+}
+
+/* MAC address input highlight */
+#computer-form-modal #pc-mac:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 1px rgba(157, 78, 221, 0.25);
+}
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+    #computer-form-modal .modal-dialog {
+        margin: 0.75rem;
+    }
+
+    #computer-form-modal .card-header {
+        padding: 1.25rem;
+    }
+
+    #computer-form-modal .card-body {
+        padding: 1.25rem;
+    }
+
+    #computer-form-modal .card-header h3 {
+        font-size: 1.3rem;
+    }
+
+    #computer-form-modal form label {
+        font-size: 0.9rem;
+    }
+
+    #computer-form-modal .form-control,
+    #computer-form-modal .input-group-text {
+        padding: 0.6rem 0.8rem;
+        font-size: 0.95rem;
+    }
+
+    #computer-form-modal #save-computer-btn {
+        padding: 0.75rem 1.25rem;
+        font-size: 1rem;
+    }
+}
+
+/* Additional futuristic details */
+#computer-form-modal .form-control:focus {
+    animation: pulseBorder 2s infinite;
+}
+
+@keyframes pulseBorder {
+    0%, 100% {
+        border-color: var(--primary-color);
+    }
+    50% {
+        border-color: var(--secondary-color);
+    }
+}
+
+/* Input autofill styling */
+#computer-form-modal .form-control:-webkit-autofill,
+#computer-form-modal .form-control:-webkit-autofill:hover,
+#computer-form-modal .form-control:-webkit-autofill:focus {
+    -webkit-text-fill-color: var(--light-text);
+    transition: background-color 5000s ease-in-out 0s;
+    caret-color: var(--secondary-color);
+}
+
+/* Focus style for accessibility */
+#computer-form-modal *:focus {
+    outline: none;
+}
+
+/* Error state animation */
+@keyframes shake {
+    0%, 100% {transform: translateX(0);}
+    10%, 30%, 50%, 70%, 90% {transform: translateX(-5px);}
+    20%, 40%, 60%, 80% {transform: translateX(5px);}
+}
+
+#computer-form-modal .is-invalid {
+    animation: shake 0.6s;
+}

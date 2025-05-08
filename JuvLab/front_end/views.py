@@ -9,14 +9,16 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 import json
 import datetime
-from bootcampManagement.models import Student
+from bootcampManagement.models import Student, Computer
 
 
 def home(request):
     template = 'home.html'
     participant = Student.objects.all()
+    computers = Computer.objects.all()
     page_object = {
-        'participants': participant
+        'participants': participant,
+        'computers' : computers,
     }
     return render(
         request,
